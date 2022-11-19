@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext, useEffect, useState } from "react";
+import AppRouter from "./components/AppRouter";
+import NavBar from "./components/Navbar";
+import { observer } from "mobx-react-lite";
+import { BrowserRouter } from "react-router-dom";
+
+import { Context } from "./index";
+import { check } from "./http/userAPI";
+import { Spinner } from "react-bootstrap";
 
 function App() {
+  const { user, isAuth } = useContext(Context);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    check()
+      .then((data) => {
+        user.setUser(data);
+        user.setIsAuth(true);
+      })
+      .finally(() => setLoading(false));
+  }, [isAuth, user]);
+
+  if (loading) {
+    return (
+      <div
+        style={{ height: 600 }}
+        className="d-flex justify-content-center align-items-center"
+      >
+        <Spinner animation="border" variant="info" as="div" />
+      </div>
+    );
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="lg">
+      <MainPage />
+    </Container>
   );
 }
 
