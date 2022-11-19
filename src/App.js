@@ -1,41 +1,35 @@
 import React, { useContext, useEffect, useState } from "react";
-import AppRouter from "./components/AppRouter";
-import NavBar from "./components/Navbar";
 import { observer } from "mobx-react-lite";
 import { BrowserRouter } from "react-router-dom";
+import { Container } from "@mui/material";
 
+import MainPage from "./pages/MainPage";
+import { getInitialData } from "./http/usersApi";
 import { Context } from "./index";
-import { check } from "./http/userAPI";
-import { Spinner } from "react-bootstrap";
+import SpinnerComponent from "./components/Spinner";
 
-function App() {
-  const { user, isAuth } = useContext(Context);
+const App = observer(() => {
+  const users = useContext(Context);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    check()
+    getInitialData()
       .then((data) => {
-        user.setUser(data);
-        user.setIsAuth(true);
+        users.setData(data);
       })
       .finally(() => setLoading(false));
-  }, [isAuth, user]);
+  }, [users]);
 
   if (loading) {
-    return (
-      <div
-        style={{ height: 600 }}
-        className="d-flex justify-content-center align-items-center"
-      >
-        <Spinner animation="border" variant="info" as="div" />
-      </div>
-    );
+    return <SpinnerComponent />;
   }
   return (
-    <Container maxWidth="lg">
-      <MainPage />
-    </Container>
+    <BrowserRouter>
+      <Container maxWidth="lg">
+        <MainPage />
+      </Container>
+    </BrowserRouter>
   );
-}
+});
 
 export default App;
