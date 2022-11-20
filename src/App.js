@@ -4,28 +4,31 @@ import { BrowserRouter } from "react-router-dom";
 import { Container } from "@mui/material";
 
 import MainPage from "./pages/MainPage";
-import { getInitialData } from "./http/usersApi";
+import { getData } from "./http/usersApi";
 import { Context } from "./index";
 import SpinnerComponent from "./components/Spinner";
+import NavBar from "./components/Navbar";
+import Tools from "./components/Tools";
 
 const App = observer(() => {
   const users = useContext(Context);
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getInitialData()
-      .then((data) => {
-        users.setData(data);
-      })
-      .finally(() => setLoading(false));
-  }, [users]);
+  // useEffect(() => {
+  //   getData()
+  //     .then((data) => {
+  //       users.setData(data);
+  //     })
+  //     .finally(() => setLoading(false));
+  // }, [users]);
 
-  if (loading) {
-    return <SpinnerComponent />;
-  }
+  // if (loading) {
+  //   return <SpinnerComponent />;
+  // }
   return (
     <BrowserRouter>
-      <Container maxWidth="lg">
+      <NavBar />
+      <Container maxWidth="xl">
         <MainPage />
       </Container>
     </BrowserRouter>

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,10 +6,69 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { observer } from "mobx-react-lite";
 
-export default function BasicTable({ items }) {
+import { getData } from "../http/usersApi";
+import Tools from "./Tools";
+import { Context } from "../index";
+
+const BasicTable = observer(() => {
+  //const users = useContext(Context);
+  const [fetching, setFetching] = useState(true);
+  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(1);
+
+  const [error, setError] = React.useState(0);
+  const [lan, setLan] = React.useState("en_GB");
+  const [seed, setSeed] = React.useState(0);
+
+  const handleInitial = async () => {
+    console.log("handleInitial", "page:", page);
+    const data = await getData(page, lan, seed);
+    const { users } = data;
+    setItems([...items, ...users]);
+    setPage((prev) => prev + 1);
+    setFetching(false);
+  };
+
+  useEffect(() => {
+    if (fetching) {
+      handleInitial();
+    }
+  }, [fetching]);
+
+  useEffect(() => {
+    setPage(1);
+    setItems([]);
+    setFetching(true);
+  }, [lan, seed, error]);
+
+  const ScrollHandler = (e) => {
+    if (
+      e.target.documentElement.scrollHeight -
+        (e.target.documentElement.scrollTop + window.innerHeight) <
+      60
+    ) {
+      setFetching(true);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("scroll", ScrollHandler);
+    return function () {
+      document.removeEventListener("scroll", ScrollHandler);
+    };
+  }, []);
+
   return (
     <TableContainer component={Paper}>
+      <Tools
+        error={error}
+        setError={setError}
+        lan={lan}
+        setLan={setLan}
+        seed={seed}
+        setSeed={setSeed}
+      />
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -23,7 +82,7 @@ export default function BasicTable({ items }) {
         <TableBody>
           {items.map((row, index) => (
             <TableRow
-              key={row.userId}
+              key={row.name}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
@@ -39,4 +98,6 @@ export default function BasicTable({ items }) {
       </Table>
     </TableContainer>
   );
-}
+});
+
+export default BasicTable;

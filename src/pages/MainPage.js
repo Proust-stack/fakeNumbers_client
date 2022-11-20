@@ -1,6 +1,6 @@
 import React from "react";
-import Content from "../components/Content";
+import BasicTable from "../components/Table";
 
 export default function MainPage() {
-  return <Content />;
+  return <BasicTable />;
 }

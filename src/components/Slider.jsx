@@ -6,18 +6,19 @@ function valuetext(value) {
   return `${value}°C`;
 }
 
-export default function DiscreteSliderSteps() {
+export default function DiscreteSliderSteps({ error, setError }) {
   return (
-    <Box sx={{ width: 300 }}>
+    <Box sx={{ minWidth: 100 }}>
       <Slider
         aria-label="Small steps"
-        defaultValue={0.00000005}
         getAriaValueText={valuetext}
-        step={0.00000001}
+        step={0.5}
         marks
-        min={-0.00000005}
-        max={0.0000001}
+        min={0}
+        max={10}
         valueLabelDisplay="auto"
+        value={error}
+        onChange={(e) => setError(e.target.value)}
       />
     </Box>
   );

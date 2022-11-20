@@ -1,35 +1,16 @@
 import axios from "axios";
 
-let page = 1;
-
-export const getInitialData = async () => {
+export const getData = async (page, lan, seed) => {
   try {
-    const { data } = await axios.get(`${process.env.REACT_APP_API_URL}`, {
+    const { data } = await axios.get(`http://localhost:5000/api/users`, {
       params: {
-        page,
-        limit: 20,
-        locale: "ge",
-        seed: 1,
-      },
-    });
-    localStorage.setItem("data", data);
-    page++;
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-export const uploadData = async (locale, seed) => {
-  try {
-    const { data } = await axios.get(`${process.env.REACT_APP_API_URL}`, {
-      params: {
-        page,
-        limit: 10,
-        locale,
+        page: page,
+        limit: page === 1 ? 20 : 10,
+        locale: lan,
         seed,
       },
     });
-    page++;
+    console.log(data);
     return data;
   } catch (error) {
     console.log(error);
