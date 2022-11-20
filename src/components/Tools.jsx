@@ -15,14 +15,8 @@ export default function Tools(props) {
     const rndLetter = faker.random.numeric();
     setSeed(rndLetter);
   };
-  const getFakeLetter = () => {
-    return faker.random.alpha();
-  };
+
   return (
-    // <Box sx={{ marginBottom: 2, marginTop: 2 }}>
-    //   <BasicSelect />
-    //   <Slider />
-    // </Box>
     <Stack
       spacing={4}
       direction="row"
@@ -36,7 +30,6 @@ export default function Tools(props) {
           aria-label="Error"
           error={error}
           setError={setError}
-          defaultValue={0}
         />
         <TextField
           label="Error"
@@ -44,7 +37,7 @@ export default function Tools(props) {
           size="small"
           type="number"
           value={error}
-          onChange={(e) => setError(e.target.value)}
+          onChange={(e) => setError(Number(e.target.value))}
           sx={{ maxWidth: 100 }}
         />
       </Box>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,7 +10,6 @@ import { observer } from "mobx-react-lite";
 
 import { getData } from "../http/usersApi";
 import Tools from "./Tools";
-import { Context } from "../index";
 
 const BasicTable = observer(() => {
   //const users = useContext(Context);
@@ -23,8 +22,7 @@ const BasicTable = observer(() => {
   const [seed, setSeed] = React.useState(0);
 
   const handleInitial = async () => {
-    console.log("handleInitial", "page:", page);
-    const data = await getData(page, lan, seed);
+    const data = await getData(page, lan, seed, error);
     const { users } = data;
     setItems([...items, ...users]);
     setPage((prev) => prev + 1);
@@ -82,7 +80,7 @@ const BasicTable = observer(() => {
         <TableBody>
           {items.map((row, index) => (
             <TableRow
-              key={row.name}
+              key={row.userId}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
