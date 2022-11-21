@@ -7,7 +7,7 @@ export default function DiscreteSliderSteps({ error, setError }) {
     <Box sx={{ minWidth: 100 }}>
       <Slider
         aria-label="Small steps"
-        step={0.5}
+        step={0.25}
         marks
         min={0}
         max={10}

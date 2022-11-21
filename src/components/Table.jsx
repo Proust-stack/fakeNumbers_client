@@ -77,14 +77,14 @@ const BasicTable = observer(() => {
         seed={seed}
         setSeed={setSeed}
       />
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Number</TableCell>
             <TableCell align="left">uuid</TableCell>
             <TableCell align="left">Name</TableCell>
             <TableCell align="left">Address</TableCell>
-            <TableCell align="left">Phone</TableCell>
+            <TableCell align="right">Phone</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -96,10 +96,14 @@ const BasicTable = observer(() => {
               <TableCell component="th" scope="row">
                 {index + 1}
               </TableCell>
-              <TableCell align="left">{row.userId}</TableCell>
+              <TableCell align="left" sx={{ maxWidth: 200 }}>
+                {row.userId}
+              </TableCell>
               <TableCell align="left">{row.name}</TableCell>
-              <TableCell align="left">{row.address}</TableCell>
-              <TableCell align="left">{row.phone}</TableCell>
+              <TableCell align="left" sx={{ maxWidth: 300 }}>
+                {row.address}
+              </TableCell>
+              <TableCell align="right">{row.phone}</TableCell>
             </TableRow>
           ))}
         </TableBody>
