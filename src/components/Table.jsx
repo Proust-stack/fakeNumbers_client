@@ -7,15 +7,16 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { observer } from "mobx-react-lite";
+import { CSVLink } from "react-csv";
 
 import { getData } from "../http/usersApi";
 import Tools from "./Tools";
 
 const BasicTable = observer(() => {
-  //const users = useContext(Context);
   const [fetching, setFetching] = useState(true);
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
+  const [nextPage, setNextPage] = useState({});
 
   const [error, setError] = React.useState(0);
   const [lan, setLan] = React.useState("en_GB");
@@ -23,14 +24,15 @@ const BasicTable = observer(() => {
 
   const handleInitial = async () => {
     const data = await getData(page, lan, seed, error);
-    const { users } = data;
+    const { users, next } = data;
     setItems([...items, ...users]);
+    setNextPage(next);
     setPage((prev) => prev + 1);
     setFetching(false);
   };
 
   useEffect(() => {
-    if (fetching) {
+    if (fetching && nextPage) {
       handleInitial();
     }
   }, [fetching]);
@@ -38,6 +40,7 @@ const BasicTable = observer(() => {
   useEffect(() => {
     setPage(1);
     setItems([]);
+    setNextPage({});
     setFetching(true);
   }, [lan, seed, error]);
 
@@ -45,7 +48,7 @@ const BasicTable = observer(() => {
     if (
       e.target.documentElement.scrollHeight -
         (e.target.documentElement.scrollTop + window.innerHeight) <
-      60
+      40
     ) {
       setFetching(true);
     }
@@ -58,7 +61,14 @@ const BasicTable = observer(() => {
   }, []);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} style={{ marginTop: "10px" }}>
+      <CSVLink
+        data={items}
+        separator={";"}
+        style={{ textDecoration: "none", marginTop: "200px" }}
+      >
+        Download CSV
+      </CSVLink>
       <Tools
         error={error}
         setError={setError}

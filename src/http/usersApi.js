@@ -11,7 +11,6 @@ export const getData = async (page, lan, seed, error) => {
         error,
       },
     });
-    console.log(data);
     return data;
   } catch (error) {
     console.log(error);
